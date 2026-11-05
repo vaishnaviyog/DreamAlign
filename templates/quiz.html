@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}DreamAlign — Career Quiz{% endblock %}
+{% block content %}
+<div class="progress-wrap" aria-hidden="true">
+  <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+  <span class="progress-label" id="progressLabel">0 / {{ questions|length }} answered</span>
+</div>
+
+<section class="card fade-in">
+  <h1 class="title">🚀 DreamAlign Career Quiz</h1>
+  <p class="subtitle">Go with your gut — there are no wrong answers.</p>
+
+  <form method="POST" action="{{ url_for('results') }}" id="quizForm" class="quiz" novalidate>
+    {% for text, icon, options in questions %}
+    {% set qi = loop.index %}
+    <fieldset class="question">
+      <legend><span class="q-num">{{ qi }}</span><span class="q-icon" aria-hidden="true">{{ icon }}</span>{{ text }}</legend>
+      <div class="options">
+        {% for label, _ in options %}
+        <label class="option">
+          <input type="radio" name="q{{ qi }}" value="{{ loop.index0 }}" required />
+          <span>{{ label }}</span>
+        </label>
+        {% endfor %}
+      </div>
+    </fieldset>
+    {% endfor %}
+
+    <p class="form-hint" id="formHint" role="status"></p>
+    <button type="submit" class="btn btn-primary btn-block">See My Career Fit 🚀</button>
+  </form>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function () {
+    const form = document.getElementById('quizForm');
+    const total = {{ questions|length }};
+    const bar = document.getElementById('progressBar');
+    const label = document.getElementById('progressLabel');
+    const hint = document.getElementById('formHint');
+
+    function answered() {
+      return new Set([...form.querySelectorAll('input:checked')].map(i => i.name)).size;
+    }
+    function update() {
+      const n = answered();
+      bar.style.width = (100 * n / total) + '%';
+      label.textContent = n + ' / ' + total + ' answered';
+      if (n === total) hint.textContent = '';
+    }
+    form.addEventListener('change', update);
+
+    form.addEventListener('submit', function (e) {
+      const firstMissing = [...form.querySelectorAll('fieldset')]
+        .find(fs => !fs.querySelector('input:checked'));
+      if (firstMissing) {
+        e.preventDefault();
+        firstMissing.classList.add('missing');
+        firstMissing.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        hint.textContent = 'Please answer every question (' + (total - answered()) + ' left).';
+        setTimeout(() => firstMissing.classList.remove('missing'), 1600);
+      }
+    });
+    update();
+  })();
+</script>
+{% endblock %}

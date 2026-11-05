@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}DreamAlign — Discover Your Perfect Career{% endblock %}</title>
+  <meta name="description" content="Answer 12 quick questions and DreamAlign matches your strengths to 25 career paths." />
+  <meta name="theme-color" content="#6d28d9" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="DreamAlign — Discover Your Perfect Career" />
+  <meta property="og:description" content="Answer 12 quick questions and find the careers that fit your strengths." />
+  <meta property="og:image" content="{{ request.url_root }}static/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌟</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <div class="blob blob-a" aria-hidden="true"></div>
+  <div class="blob blob-b" aria-hidden="true"></div>
+
+  <main class="page">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">Made with 💖 by Vaishnavi &amp; Keerthana · DreamAlign © 2025</footer>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

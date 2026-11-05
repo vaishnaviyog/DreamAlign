@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block body_class %}center{% endblock %}
+{% block content %}
+<section class="card hero fade-in">
+  <div class="badge">✨ Free career discovery quiz</div>
+  <h1 class="glow">🌟 DreamAlign</h1>
+  <p class="lead">Unveil your unique strengths and align your dreams with the perfect career path.</p>
+
+  <a href="{{ url_for('quiz') }}" class="btn btn-primary btn-lg">Start Assessment 🚀</a>
+
+  <ul class="stats">
+    <li><strong>{{ n_questions }}</strong><span>quick questions</span></li>
+    <li><strong>{{ n_careers }}</strong><span>career paths</span></li>
+    <li><strong>~2 min</strong><span>to your results</span></li>
+  </ul>
+</section>
+{% endblock %}

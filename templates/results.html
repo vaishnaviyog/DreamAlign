@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}DreamAlign — Your Results{% endblock %}
+{% block content %}
+<section class="card fade-in">
+  <h1 class="title glow">🌟 Your Dream Career Results 🌟</h1>
+  <p class="subtitle">Based on your answers, here are your top matches:</p>
+
+  <div class="top3">
+    {% for name, pct in top3 %}
+    <article class="result {% if loop.first %}result-best{% endif %}">
+      <div class="medal" aria-hidden="true">{{ ['🥇', '🥈', '🥉'][loop.index0] }}</div>
+      <h2>{{ name }}</h2>
+      <div class="pct">{{ pct }}<small>% fit</small></div>
+      <p>{{ careers[name][1] }}</p>
+      {% if matches[name] %}
+      <div class="chips">
+        {% for t in matches[name] %}<span class="chip">{{ t }}</span>{% endfor %}
+      </div>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </div>
+
+  {% if top_strengths %}
+  <div class="strengths">
+    <h3>💡 Your top strengths</h3>
+    <div class="chips chips-lg">
+      {% for t in top_strengths %}<span class="chip">{{ t }}</span>{% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="chart">
+    <h3>📊 How you match across careers</h3>
+    {% for name, pct in chart %}
+    <div class="bar-row">
+      <span class="bar-name">{{ name }}</span>
+      <div class="bar-track"><div class="bar-fill" style="--w: {{ pct }}%"></div></div>
+      <span class="bar-pct">{{ pct }}%</span>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="actions">
+    <a href="{{ url_for('quiz') }}" class="btn btn-light">Take Again 🔁</a>
+    <button type="button" class="btn btn-ghost" id="shareBtn">Share DreamAlign 📤</button>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function () {
+    const btn = document.getElementById('shareBtn');
+    const url = location.origin + '/';
+    const text = {{ ('My top career match on DreamAlign is ' ~ top3[0][0] ~ ' (' ~ top3[0][1] ~ '% fit)! Find yours:')|tojson }};
+    btn.addEventListener('click', async function () {
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: 'DreamAlign', text: text, url: url });
+          return;
+        }
+        await navigator.clipboard.writeText(text + ' ' + url);
+        btn.textContent = 'Link copied ✅';
+      } catch (e) {
+        if (e && e.name !== 'AbortError') btn.textContent = url;
+      }
+    });
+  })();
+</script>
+{% endblock %}
